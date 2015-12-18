@@ -1,0 +1,116 @@
+
+<?php
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+include "functions.php";
+function send($type,$sid,$sid2)
+{
+	//echo "function called";
+	//echo $sid;
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+	/*
+	if (isset($argv[1]))
+	{
+	  $msg = $argv[1];
+	}
+	else
+	{
+	  $msg = "test message";
+	}
+	*/
+	$request = array();
+	$request['type'] = "$type";
+	//echo "<br>";
+	//echo $request['type'];
+	///echo "<br>";
+	//echo "array created";
+	$request['steamid'] = "$sid";
+	$request['steamid2'] = "$sid2";
+	//echo $request['steamid'];
+	//$request['password'] = "password";
+	//$request['message'] = $msg;
+	$response = $client->send_request($request);
+	//echo "request sent";
+	//$response = $client->publish($request);
+
+	$i=0;
+	$playerid="";
+	if($type=='showFriends')
+	{
+		//echo $response[3];
+		foreach($response as $em)
+		{
+			//echo $em;
+			//echo "<br>";	
+			if($i==0)
+			{
+				//echo "<br>";
+				echo "<img src=$em>";
+				echo "\r\n";
+				$i++;	
+			}
+			elseif($i==1)
+			{
+				//echo gettype($em);
+				$playerid=(string)$em;
+				//echo $playerid;
+				$i++;
+			}
+			else
+			{
+				//print_r($playerid);
+				echo "<a href= 'fofLoad.php?sid=$playerid'>'$em'</a>";
+				echo "<br>";
+
+				//echo $playerid;
+				$i=0;	
+			}
+		}
+	}
+	if($type=='showFriends2')
+	{
+		//echo $response[3];
+		foreach($response as $em)
+		{
+			//echo $em;
+			//echo "<br>";	
+			if($i==0)
+			{
+				//echo "<br>";
+				echo "<img src=$em>";
+				echo "\r\n";
+				$i++;	
+			}
+			elseif($i==1)
+			{
+				//echo gettype($em);
+				$playerid=(string)$em;
+				//echo $playerid;
+				$i++;
+			}
+			else
+			{	
+				//$gamecount2=compareGames("76561197978534933","76561198011789036");
+				//echo $gamecount2;
+				//print_r($playerid);
+				echo "$em"." has ".compareGames($plaerid,"76561198011789036")." games in common";
+				echo "<br>";
+
+				//echo $playerid;
+				$i=0;	
+			}
+		}
+	}
+	if($type=='fofLoad'){
+		var_dump($response);	
+	}
+
+
+//echo "client received response: ".PHP_EOL;
+//print_r($response);
+//echo "\n\n";
+
+//echo $argv[0]." END".PHP_EOL;
+}
+?>
