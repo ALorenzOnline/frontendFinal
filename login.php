@@ -28,10 +28,14 @@ if (isset($_POST['submit']))
              
             // SQL query to fetch information of registerd users and finds user match.
             $result = $connection->query("select * from tbluser where   email='$email' and pass ='$crypted'");
+	    
              
             if ($result->num_rows > 0) 
             {
                 $_SESSION['login_user']= $email; // Initializing Session
+		$key=$_SESSION['login_user'];
+		$stamp=date(i);
+		$storeSession=mysqli_query($connection,"INSERT INTO sessionCheck(name,stamp) VALUES ('$key',$stamp);");
                 header("location: profile.php"); // Redirecting To Other Page
             }
             else
